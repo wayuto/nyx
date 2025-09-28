@@ -1,0 +1,136 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "Nyx",
+    "scopeName": "source.nyx",
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#strings"
+        },
+        {
+            "include": "#numbers"
+        },
+        {
+            "include": "#keywords"
+        },
+        {
+            "include": "#types"
+        },
+        {
+            "include": "#func-def"
+        },
+        {
+            "include": "#var-decl"
+        },
+        {
+            "include": "#operators"
+        },
+        {
+            "include": "#brackets"
+        },
+        {
+            "include": "#punctuation"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "match": "#.*$",
+                    "name": "comment.line.number-sign.nyx"
+                },
+                {
+                    "match": "//.*$",
+                    "name": "comment.line.double-slash.nyx"
+                },
+                {
+                    "match": "/\\*[\\s\\S]*?\\*/",
+                    "name": "comment.block.nyx"
+                }
+            ]
+        },
+        "strings": {
+            "name": "string.quoted.double.nyx",
+            "begin": "\"",
+            "end": "\"",
+            "patterns": [
+                {
+                    "name": "constant.character.escape.nyx",
+                    "match": "\\\\."
+                }
+            ]
+        },
+        "numbers": {
+            "match": "\\b\\d+(\\.\\d+)?([eE][+-]?\\d+)?\\b",
+            "name": "constant.numeric.nyx"
+        },
+        "keywords": {
+            "match": "\\b(def|class|if|else|for|while|return|true|false|null|importC|\\\\cpp|in|and|or|not|is)\\b",
+            "name": "keyword.control.nyx"
+        },
+        "types": {
+            "match": "\\b(int|float|str|bool|list|dict|auto)\\b",
+            "name": "storage.type.nyx"
+        },
+        "func-def": {
+            "match": "\\b(def)\\s+([A-Za-z_]\\w*)",
+            "captures": {
+                "1": {
+                    "name": "keyword.control.nyx"
+                },
+                "2": {
+                    "name": "entity.name.function.nyx"
+                }
+            }
+        },
+        "var-decl": {
+            "match": "\\b([A-Za-z_]\\w*)\\s*:\\s*(int|float|str|bool|list|dict|auto)\\s*=",
+            "captures": {
+                "1": {
+                    "name": "variable.other.nyx"
+                },
+                "2": {
+                    "name": "storage.type.nyx"
+                }
+            }
+        },
+        "operators": {
+            "match": "\\+\\=|\\-\\=|\\*\\=|/\\=|==|!=|<=|>=|<|>|\\+|\\-|\\*|/",
+            "name": "keyword.operator.nyx"
+        },
+        "brackets": {
+            "patterns": [
+                {
+                    "match": "\\{",
+                    "name": "punctuation.curlybrace.open.nyx"
+                },
+                {
+                    "match": "\\}",
+                    "name": "punctuation.curlybrace.close.nyx"
+                },
+                {
+                    "match": "\\[",
+                    "name": "punctuation.squarebracket.open.nyx"
+                },
+                {
+                    "match": "\\]",
+                    "name": "punctuation.squarebracket.close.nyx"
+                },
+                {
+                    "match": "\\(",
+                    "name": "punctuation.parenthesis.open.nyx"
+                },
+                {
+                    "match": "\\)",
+                    "name": "punctuation.parenthesis.close.nyx"
+                }
+            ]
+        },
+        "punctuation": {
+            "match": "[,;:.]",
+            "name": "punctuation.separator.nyx"
+        }
+    }
+}

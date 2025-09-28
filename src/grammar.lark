@@ -1,0 +1,97 @@
+start: stmt+
+
+PLUS_EQ: "+="
+MINUS_EQ: "-="
+MUL_EQ:  "*="
+DIV_EQ:  "/="
+
+?stmt: expr_stmt
+    | var_decl
+    | var_auto_decl
+    | func_decl
+    | ret_stmt
+    | if_stmt
+    | for_stmt
+    | while_stmt
+    | aug_assign
+    | cpp_embed
+    | import_c
+
+var: CNAME
+var_decl: CNAME ":" CNAME "=" expr
+var_auto_decl: CNAME "=" expr
+
+func_decl: "def" CNAME "(" param_list? ")" ["->" CNAME] block
+param_list: param ("," param)*
+param: CNAME ":" CNAME
+
+ret_stmt: "return" expr
+
+func_call: CNAME "(" [expr ("," expr)*] ")"
+
+if_stmt: "if" "(" expr ")" block ["else" block]
+    | "if" expr block ["else" block]
+
+for_stmt: "for" CNAME "in" expr block
+
+while_stmt: "while" "(" expr ")" block
+    | "while" expr block
+
+aug_assign: CNAME (PLUS_EQ | MINUS_EQ | MUL_EQ | DIV_EQ) expr
+
+cpp_embed: "\cpp" STRING
+
+import_c: "importC" STRING
+
+expr_stmt: expr
+
+block: "{" stmt* "}"
+
+?expr: comparison
+
+?comparison: arith (binop arith)*
+
+?arith: arith "+" term   -> add
+    | arith "-" term   -> sub
+    | term
+
+?term: term "*" factor -> mul
+    | term "/" factor -> div
+    | factor
+
+?factor: "-" factor    -> neg
+      | atom
+
+?atom: NUMBER           -> number
+    | STRING            -> string
+    | "true"  -> true
+    | "false" -> false
+    | "null"  -> null
+    | ";" -> semicolon
+    | list
+    | dict
+    | "(" expr ")"
+    | func_call
+    | CNAME             -> var
+
+GT: ">"
+LT: "<"
+GE: ">="
+LE: "<="
+EQ: "=="
+NE: "!="
+
+?binop: GT | LT | GE | LE | EQ | NE
+
+list: "[" (expr ("," expr)*)? "]"
+dict: "[" pair ("," pair)* "]"
+pair: STRING ":" expr
+
+%import common.ESCAPED_STRING -> STRING
+%import common.SIGNED_NUMBER -> NUMBER
+%import common.CNAME
+%import common.WS
+
+
+%ignore WS
+%ignore /#.*/
