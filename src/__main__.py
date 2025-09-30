@@ -2,7 +2,7 @@ import subprocess
 import sys
 import argparse
 from pathlib import Path
-from src.codegen import codegen
+from src.codegen.core import codegen
 from src.constants import *
 
 
@@ -18,9 +18,9 @@ def load_code(path: str | None) -> str:
     raise FileNotFoundError(path)
 
 
-def compile_cpp(src: str, exe: str, opt: str = "-O2") -> None:
+def compile_cpp(src: str, exe: str, opt: str = "-O2", std="c++20") -> None:
     o_file = Path(src).with_suffix(".o")
-    subprocess.run(["g++", opt, "-o", o_file, "-c", src], check=True)
+    subprocess.run(["g++", f"-std={std}", opt, "-o", o_file, "-c", src], check=True)
     subprocess.run(["g++", "-o", exe, o_file, PYLIB_OUT], check=True)
     o_file.unlink()
     print(f"Compiled: {exe}")
@@ -55,6 +55,12 @@ def main() -> None:
         help="compiler optimization level (default: -O2)",
     )
     parser.add_argument(
+        "-s",
+        "--std",
+        default="20",
+        help="c++ standard",
+    )
+    parser.add_argument(
         "-a",
         "--ast",
         action="store_true",
@@ -66,11 +72,11 @@ def main() -> None:
         parser.print_help()
         sys.exit(0)
 
-    code = load_code(args.source)
-    c_code = codegen(code)
+    code: str = load_code(args.source)
+    c_code: str = codegen(code)
 
     if args.ast:
-        from src.codegen import grammar, preprocess
+        from src.codegen.core import grammar, preprocess
 
         tree = grammar.parse(preprocess(code))
         print(tree.pretty())
@@ -80,7 +86,9 @@ def main() -> None:
         print("Generated: out.cpp")
 
         if args.compile:
-            compile_cpp(src="out.cpp", exe=args.output, opt=args.opt)
+            compile_cpp(
+                src="out.cpp", exe=args.output, opt=args.opt, std=f"c++{args.std}"
+            )
 
 
 if __name__ == "__main__":

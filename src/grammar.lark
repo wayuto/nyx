@@ -23,7 +23,7 @@ var_auto_decl: CNAME "=" expr
 
 func_decl: "def" CNAME "(" param_list? ")" ["->" CNAME] block
 param_list: param ("," param)*
-param: CNAME ":" CNAME
+param: CNAME [":" CNAME]
 
 ret_stmt: "return" expr
 
