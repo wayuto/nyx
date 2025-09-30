@@ -1,13 +1,11 @@
-#ifndef PY_FUNC_H
-#define PY_FUNC_H
+#ifndef NYXLIBS_H
+#define NYXLIBS_H
 
 #include <iostream>
 #include <vector>
 #include <numeric>
 #include <stdexcept>
 #include <functional>
-
-#define int(v) (std::stoi(v))
 
 std::vector<int> range(int n);
 
@@ -20,4 +18,4 @@ inline void print(Args &&...msg)
 
 std::string input(std::string prompt);
 
-#endif // PY_FUNC_H
+#endif

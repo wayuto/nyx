@@ -37,7 +37,11 @@ class CodeGen(Transformer):
     if_stmt = controls.if_stmt
     for_stmt = controls.for_stmt
     while_stmt = controls.while_stmt
+    match_stmt = controls.match_stmt
+    case_stmt = controls.case_stmt
 
+    lbrace = expressions.lbrace
+    rbrace = expressions.rbrace
     block = expressions.block
     expr_stmt = expressions.expr_stmt
     semicolon = expressions.semicolon

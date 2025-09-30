@@ -1,5 +1,5 @@
 {
     "files.associations": {
-        "py_func.h": "c"
+        "*.nyx": "python",
     }
 }

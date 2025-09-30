@@ -9,7 +9,7 @@ def param_list(_, *params) -> str:
     return ", ".join(str(p) for p in params)
 
 
-def func_decl(_, name, params="", ret=None, body="") -> str:
+def func_decl(_, name, params="", ret=None, body="") -> None:
     ret_type = ctypes.get(str(ret), "auto") if ret else "auto"
     decl = f"{ret_type} {name}({params}) {body}"
     decls.append(decl)

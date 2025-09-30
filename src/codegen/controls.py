@@ -8,3 +8,13 @@ def for_stmt(_, var, iterable, body) -> str:
 
 def while_stmt(_, cond, body) -> str:
     return f"while ({cond}) {body}"
+
+
+def case_stmt(_, value, body) -> str:
+    if value == "_":
+        return f"default: {body}break;"
+    return f"case {value}: {body}break;"
+
+
+def match_stmt(_, target, *cases):
+    return f"switch({target}) {{\n{''.join(cases)}}}"

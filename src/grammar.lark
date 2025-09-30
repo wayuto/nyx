@@ -13,6 +13,7 @@ DIV_EQ:  "/="
     | if_stmt
     | for_stmt
     | while_stmt
+    | match_stmt
     | aug_assign
     | cpp_embed
     | import_c
@@ -37,6 +38,9 @@ for_stmt: "for" CNAME "in" expr block
 while_stmt: "while" "(" expr ")" block
     | "while" expr block
 
+match_stmt: "match" expr "{" case_stmt* "}"
+case_stmt: "case" expr block
+
 aug_assign: CNAME (PLUS_EQ | MINUS_EQ | MUL_EQ | DIV_EQ) expr
 
 cpp_embed: "\cpp" STRING
@@ -45,7 +49,10 @@ import_c: "importC" STRING
 
 expr_stmt: expr
 
-block: "{" stmt* "}"
+block: lbrace stmt* rbrace
+
+lbrace: "{"
+rbrace: "}"
 
 ?expr: comparison
 
