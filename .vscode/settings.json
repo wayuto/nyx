@@ -1,5 +1,5 @@
 {
     "files.associations": {
-        "*.nyx": "python",
+        "*.nyx": "plaintext"
     }
 }

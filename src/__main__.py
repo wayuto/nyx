@@ -18,9 +18,11 @@ def load_code(path: str | None) -> str:
     raise FileNotFoundError(path)
 
 
-def compile_cpp(src: str, exe: str, opt: str = "-O2", std="c++20") -> None:
+def compile_cpp(src: str, exe: str, opt: str = "2", std="c++20") -> None:
     o_file = Path(src).with_suffix(".o")
-    subprocess.run(["g++", f"-std={std}", opt, "-o", o_file, "-c", src], check=True)
+    subprocess.run(
+        ["g++", f"-std={std}", f"-O{opt}", "-o", o_file, "-c", src], check=True
+    )
     subprocess.run(["g++", "-o", exe, o_file, PYLIB_OUT], check=True)
     o_file.unlink()
     print(f"Compiled: {exe}")
@@ -34,7 +36,7 @@ def main() -> None:
     parser.add_argument(
         "source",
         nargs="?",
-        help="source file to translate (if omitted, show this help)",
+        help="source file to compile (if omitted, show this help)",
     )
     parser.add_argument(
         "-c",
@@ -51,7 +53,7 @@ def main() -> None:
     parser.add_argument(
         "-O",
         "--opt",
-        default="-O2",
+        default="2",
         help="compiler optimization level (default: -O2)",
     )
     parser.add_argument(
@@ -76,18 +78,21 @@ def main() -> None:
     c_code: str = codegen(code)
 
     if args.ast:
-        from src.codegen.core import grammar, preprocess
+        from src.codegen.core import grammar
 
-        tree = grammar.parse(preprocess(code))
+        tree = grammar.parse(code)
         print(tree.pretty())
     else:
-        with open("out.cpp", "w", encoding="utf-8") as f:
+        with open(f"{args.source}.cpp", "w", encoding="utf-8") as f:
             f.write(c_code)
-        print("Generated: out.cpp")
+        print(f"Generated: {args.source}.cpp")
 
         if args.compile:
             compile_cpp(
-                src="out.cpp", exe=args.output, opt=args.opt, std=f"c++{args.std}"
+                src=f"{args.source}.cpp",
+                exe=args.output,
+                opt=args.opt,
+                std=f"c++{args.std}",
             )
 
 
